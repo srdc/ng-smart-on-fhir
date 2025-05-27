@@ -1,0 +1,12 @@
+{
+  "$schema": "../../node_modules/ng-packagr/ng-package.schema.json",
+  "dest": "../../dist/ng-smart-on-fhir",
+  "lib": {
+    "entryFile": "src/public-api.ts",
+    "styleIncludePaths": [
+      "../../node_modules"
+    ]
+  },
+  "assets": [{ "input": "src/lib/themes", "glob": "**/*.*", "output": "themes" }],
+  "allowedNonPeerDependencies": ["jsqr", "jose", "pako", "fhirclient"]
+}

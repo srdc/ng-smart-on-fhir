@@ -10,28 +10,58 @@
   },
   "private": true,
   "dependencies": {
-    "@angular/animations": "^19.0.0",
-    "@angular/common": "^19.0.0",
-    "@angular/compiler": "^19.0.0",
-    "@angular/core": "^19.0.0",
-    "@angular/forms": "^19.0.0",
-    "@angular/platform-browser": "^19.0.0",
-    "@angular/platform-browser-dynamic": "^19.0.0",
-    "@angular/router": "^19.0.0",
+    "@angular/animations": "^17.3.0",
+    "@angular/common": "^17.3.0",
+    "@angular/compiler": "^17.3.0",
+    "@angular/core": "^17.3.0",
+    "@angular/forms": "^17.3.0",
+    "@angular/platform-browser": "^17.3.0",
+    "@angular/platform-browser-dynamic": "^17.3.0",
+    "@angular/router": "^17.3.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
-    "zone.js": "~0.15.0"
+    "zone.js": "~0.14.3",
+    "jsqr": "^1.4.0",
+    "pako": "^2.1.0",
+    "jose": "^5.9.6",
+    "bootstrap": "^5.3.3",
+    "bootstrap-icons": "^1.11.3",
+    "fhirclient": "^2.5.3"
   },
   "devDependencies": {
-    "@angular/cli": "^19.0.5",
-    "@angular/compiler-cli": "^19.0.0",
+    "@angular-devkit/build-angular": "^17.3.7",
+    "@angular/cli": "^17.3.7",
+    "@angular/compiler-cli": "^17.3.0",
+    "@types/fhir": "^0.0.41",
     "@types/jasmine": "~5.1.0",
-    "jasmine-core": "~5.4.0",
+    "@types/pako": "^2.0.3",
+    "@types/uuid": "^10.0.0",
+    "jasmine-core": "~5.1.0",
     "karma": "~6.4.0",
     "karma-chrome-launcher": "~3.2.0",
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
-    "typescript": "~5.6.2"
-  }
+    "ng-packagr": "^17.3.0",
+    "typescript": "~5.4.2"
+  },
+  "author": {
+    "email": "technical@srdc.com.tr",
+    "name": "SRDC",
+    "url": "https://srdc.com.tr"
+  },
+  "repository": "srdc/ng-smart-on-fhir",
+  "license": "Apache-2.0",
+  "keywords": [
+    "fhir",
+    "hl7",
+    "smart",
+    "healthcare",
+    "interoperability",
+    "medical",
+    "ehr",
+    "cds",
+    "phr",
+    "patient"
+  ]
 }

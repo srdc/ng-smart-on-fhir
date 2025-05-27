@@ -1,6 +1,6 @@
 [![SRDC](https://www.srdc.com.tr/wp-content/uploads/2014/12/srdc-wp.png)](https://srdc.com.tr/en)
 
-# NgSmartOnFhir - 🔥HL7 SMART-on-FHIR Library for Angular 
+# NgSmartOnFhir - 🔥HL7 SMART-on-FHIR Library for Angular
 
 [![Angular v17](https://img.shields.io/badge/Angular-v17.3.0-blue.svg)](https://v17.angular.io/docs)
 [![NPM](https://img.shields.io/npm/v/ng-smart-on-fhir.svg)](https://www.npmjs.com/package/ng-smart-on-fhir)
@@ -23,7 +23,7 @@ Run `ng build ng-smart-on-fhir` to build the project. The build artifacts will b
 
 ## Installation
 
-### 1. Library and FHIR typings 
+### 1. Library and FHIR typings
 
 ```
 npm install @types/fhir --save-dev
@@ -44,7 +44,7 @@ npm install bootstrap --save
 
 ### 1. Importing the Module
 
-Import the `SmartOnFhirModule` to your app module with the necessary [configurations](smartonfhirconfig). 
+Import the `SmartOnFhirModule` to your app module with the necessary [configurations](smartonfhirconfig).
 
 ***app.module.ts***
 ```{ts}
