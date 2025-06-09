@@ -405,3 +405,7 @@ import {
     SmartOnFhirModule
 } from "../../../../../../smart-on-fhir/projects/smart-on-fhir/src/lib/smart-on-fhir.module";
 ```
+
+## Example Usage
+
+You can check the [risk calculation apps](https://github.com/srdc/smart-on-fhir-web-apps) to see how the `ng-smart-on-fhir` library is used with multiple login options.  
