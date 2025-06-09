@@ -2,9 +2,9 @@
 
 # NgSmartOnFhir - 🔥HL7 SMART-on-FHIR Library for Angular 
 
-[![Angular v17](https://img.shields.io/badge/Angular-v17.3.0-blue.svg)](https://v17.angular.io/docs)
+[![Angular v17](https://img.shields.io/badge/Angular-v17.3.0-red.svg)](https://v17.angular.io/docs)
 [![NPM](https://img.shields.io/npm/v/ng-smart-on-fhir.svg)](https://www.npmjs.com/package/ng-smart-on-fhir)
-[![HL7 FHIR](https://img.shields.io/badge/HL7-FHIR-red.svg)](https://hl7.org/fhir/)
+![License](https://img.shields.io/github/license/srdc/ng-smart-on-fhir.svg)
 
 An Angular library to provide SMART-on-FHIR authorization with:
 
