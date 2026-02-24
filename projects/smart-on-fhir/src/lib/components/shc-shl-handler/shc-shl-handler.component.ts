@@ -33,12 +33,78 @@ import {SmartAuthService} from "../../services/smart-auth.service";
             <td><b>Gender</b></td>
             <td>{{ patient?.gender }}</td>
           </tr>
+          @if (ips) {
+            <tr>
+              <td colspan="2"><h4>International Patient Summary Imported</h4></td>
+            </tr>
+            @for (section of ips.section; track section.title) {
+              <tr>
+                <td colspan="2">
+                  <h5>{{section.title}}</h5>
+                </td>
+              </tr>
+              <ng-template #myTemplate let-resource>
+                @if (resource) {
+                  @switch (resource.resourceType) {
+                    @case ('Condition') {
+                      <tr>
+                        <td>{{resource.code?.coding?.at(0)?.display || resource.code?.coding?.at(0)?.code || resource.code?.text}}</td>
+                        <td class="text-end">
+                          {{resource.onsetDateTime | date}}
+                        </td>
+                      </tr>
+                    }
+                    @case ('MedicationStatement') {
+                      <tr>
+                        <td>{{resource.medicationCodeableConcept?.coding?.at(0)?.display || resource.medicationCodeableConcept?.coding?.at(0)?.code || resource.medicationCodeableConcept?.text}}</td>
+                        <td class="text-end">
+                          {{resource.effectiveDateTime | date}}
+                        </td>
+                      </tr>
+                    }
+                    @case ('AllergyIntolerance') {
+                      <tr>
+                        <td>{{resource.code?.coding?.at(0)?.display || resource.code?.coding?.at(0)?.code || resource.code?.text}}</td>
+                        <td class="text-end">
+                          {{resource.onsetDateTime | date}}
+                        </td>
+                      </tr>
+                    }
+                    @case ('Immunization') {
+                      <tr>
+                        <td>{{resource.vaccineCode?.coding?.at(0)?.display || resource.vaccineCode?.coding?.at(0)?.code || resource.vaccineCode?.text}}</td>
+                        <td class="text-end">
+                          {{resource.occurrenceDateTime | date}}
+                        </td>
+                      </tr>
+                    }
+                    @case ('Observation') {
+                      <tr>
+                        <td>{{resource.code?.coding?.at(0)?.display || resource.code?.coding?.at(0)?.code || resource.code?.text}}</td>
+                        <td class="text-end">
+                          {{resource.effectiveDateTime | date}}
+                          <br>
+                          @if (resource.valueQuantity) {
+                            {{resource.valueQuantity.value}} {{resource.valueQuantity.unit || resource.valueQuantity.code}}
+                          }
+                        </td>
+                      </tr>
+                    }
+                  }
+                }
+              </ng-template>
+              @for (entry of section.entry; track entry.reference) {
+                <ng-container *ngTemplateOutlet="myTemplate; context: { $implicit: referenceMap[entry.reference || ''] }"></ng-container>
+              }
+            }
+          } @else {
             @for (resources of sof.importedResources | keyvalue; track resources.key) {
               <tr>
                 <td><b>{{resources.key | camelCaseSpaced}}</b></td>
                 <td><span class="sof-badge sof-primary-background sof-text-light">{{resources.value?.length}}</span></td>
               </tr>
             }
+          }
           <tr>
             <td colspan="2" class="text-end">
               <button class="sof-button sof-button-primary" routerLink="/">Continue <i class="sof-icon sof-icon-caret-right"></i></button>
@@ -58,11 +124,12 @@ import {SmartAuthService} from "../../services/smart-auth.service";
 })
 
 export class ShcShlHandlerComponent implements OnInit {
-  _window = window;
 
   invalidSignature: boolean = false;
 
   patient: fhir4.Patient|undefined;
+  referenceMap: { [ref: string]: fhir4.Resource } = {};
+  ips: fhir4.Composition|undefined;
 
   get patientName() {
     return this.patient?.name?.map(name => (name.given?.join(' ') || '') + ' ' + name.family).join(', ')
@@ -82,10 +149,12 @@ export class ShcShlHandlerComponent implements OnInit {
       try {
         if (fragment?.startsWith('shlink:/')) {
           this.sof.importSHCData(await this.shl.handleShl(fragment))
+          this.checkIPS();
         } else if (fragment?.startsWith('shc:/')) {
           this.sof.importSHCData(await this.shl.handleShc(fragment))
+          this.checkIPS();
         } else {
-          console.log(fragment)
+          console.log("No SHC data in the fragment:", fragment)
         }
       } catch (error) {
         if (error instanceof jose.errors.JWSSignatureVerificationFailed) {
@@ -100,5 +169,19 @@ export class ShcShlHandlerComponent implements OnInit {
 
   logout() {
     this.sof.logout();
+  }
+
+  private checkIPS() {
+    if (this.sof.importedResources['Composition']) {
+      const ips = (<fhir4.Composition[]>this.sof.importedResources['Composition'])
+        .find((resource: fhir4.Composition) => resource.type?.coding?.some(code => code.code === '60591-5'))
+      if (ips) {
+        this.referenceMap = this.sof.getAllImportedResources().reduce((map: {[ref: string]: fhir4.Resource}, resource) => {
+          map[resource.resourceType + '/' + resource.id] = resource;
+          return map;
+        }, {})
+        this.ips = ips;
+      }
+    }
   }
 }

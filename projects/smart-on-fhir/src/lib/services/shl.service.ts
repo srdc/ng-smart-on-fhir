@@ -42,7 +42,13 @@ export class ShlService {
       payload = await firstValueFrom(this.http.post(metadata.url, {
         recipient: window.location.origin,
         passcode
-      })).then((data: any) => data.files.filter((file: any) => file.contentType === 'application/smart-health-card' && file.embedded).map((file: any) => file.embedded))
+      })).then(async (data: any) => {
+        const embedded = data.files.filter((file: any) => file.contentType === 'application/smart-health-card' && file.embedded).map((file: any) => file.embedded)
+        const links = data.files.filter((file: any) => file.contentType === 'application/fhir+json' && file.location)
+        const requests = links.map((file: any) => firstValueFrom(this.http.get(file.location, { responseType: 'text' })))
+        const linkedCards = await Promise.all(requests)
+        return [...embedded, ...linkedCards]
+      })
     }
     if (!payload) { throw new Error('Cannot get SMART Health Link content.') }
     const shcs = await this.decryptSHLPayloadAndGetSHCs(payload, metadata.key)

@@ -3,7 +3,7 @@ import {SmartOnFhirService} from "./services/smart-on-fhir.service";
 import {LoginComponent} from "./components/login/login.component";
 import {LaunchComponent} from "./components/launch/launch.component";
 import {CallbackComponent} from "./components/callback/callback.component";
-import {AsyncPipe, KeyValuePipe, NgStyle} from "@angular/common";
+import {AsyncPipe, CommonModule, KeyValuePipe, NgStyle} from "@angular/common";
 import {QrReaderComponent} from "./components/qr-reader/qr-reader.component";
 import {CamelCaseSpacedPipe} from "./pipes/camel-case-spaced.pipe";
 import {ShcShlHandlerComponent} from "./components/shc-shl-handler/shc-shl-handler.component";
@@ -14,7 +14,7 @@ import {FormsModule} from "@angular/forms";
 
 @NgModule({
     imports: [
-        NgStyle, KeyValuePipe, RouterModule, AsyncPipe, FormsModule
+        NgStyle, KeyValuePipe, RouterModule, AsyncPipe, FormsModule, CommonModule
     ],
   exports: [],
   declarations: [LoginComponent, LaunchComponent, CallbackComponent, QrReaderComponent, CamelCaseSpacedPipe, ShcShlHandlerComponent],
