@@ -11,4 +11,5 @@ export interface SmartOnFhirConfig {
   launchClients?: LaunchClientConfig[];
   logo?: string;
   title?: string;
+  authStorage?: 'sessionStorage'|'localStorage';
 }

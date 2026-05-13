@@ -101,6 +101,13 @@ export class SmartAuthService {
     } else {
       await FHIR.oauth2.ready().then(async client => {
         this.checkPatientInToken(client)
+        if (this.config.authStorage === 'localStorage') {
+          const smartKey = sessionStorage.getItem('SMART_KEY')
+          if (smartKey) {
+            localStorage.setItem('SMART_KEY', smartKey)
+            localStorage.setItem(smartKey, <string>sessionStorage.getItem(smartKey))
+          }
+        }
         this.user = <fhir4.Practitioner|undefined>(await client.user.read().catch(() => undefined))
         this.patient = await client.patient.read().catch(() => undefined)
         this.client$.next(client);
@@ -129,10 +136,22 @@ export class SmartAuthService {
       enabled: this.enabled,
       ...(params || {})
     }))
+    if (this.config.authStorage === 'localStorage') {
+      localStorage.setItem(this.SAVED_SESSION_KEY, <string>sessionStorage.getItem(this.SAVED_SESSION_KEY))
+    }
   }
 
   // restore session from the local storage
   restoreSession() {
+    if (this.config.authStorage === 'localStorage' && !sessionStorage.getItem(this.SAVED_SESSION_KEY)
+      && localStorage.getItem(this.SAVED_SESSION_KEY)) {
+      sessionStorage.setItem(this.SAVED_SESSION_KEY, <string>localStorage.getItem(this.SAVED_SESSION_KEY))
+      if (localStorage.getItem('SMART_KEY')) {
+        const smartKey = <string>localStorage.getItem('SMART_KEY')
+        sessionStorage.setItem('SMART_KEY', smartKey)
+        sessionStorage.setItem(smartKey, <string>localStorage.getItem(smartKey))
+      }
+    }
     const saved = sessionStorage.getItem(this.SAVED_SESSION_KEY);
     if (saved) {
       const { patient, user, method, selectedClient, enabled, ...rest } = JSON.parse(saved);
@@ -191,6 +210,9 @@ export class SmartAuthService {
 
   private clearSession() {
     sessionStorage.clear()
+    if (this.config.authStorage === 'localStorage') {
+      localStorage.clear()
+    }
     this.method = 'offline';
     this.patient = this.user = undefined;
     this.selectedClient = undefined;
