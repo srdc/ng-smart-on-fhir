@@ -53,6 +53,18 @@ export class SmartOnFhirService {
     })
   }
 
+  // FHIR DELETE
+  delete(resourceType: string, id?: string, params?: { [key: string]: string|number }[]): Promise<void> {
+    if (!resourceType) return Promise.reject('Resource type should be provided.');
+    return this.ready(client => {
+      if (id) {
+        return client.delete(resourceType + '/' + id);
+      } else {
+        return client.delete(this.constructQueryURL(resourceType, params))
+      }
+    })
+  }
+
   // FHIR Operation
   operation<T>(options: {
     operationName: string,
@@ -70,8 +82,34 @@ export class SmartOnFhirService {
     }));
   }
 
+  transaction(bundle: (fhir4.Bundle & { type: 'transaction' })|fhir4.Resource[], method?: 'GET'|'HEAD'|'POST'|'PUT'|'DELETE'|'PATCH') {
+    let transactionBundle: fhir4.Bundle<fhir4.Resource>;
+    if (method && Array.isArray(bundle)) {
+       transactionBundle = {
+        resourceType: 'Bundle',
+        type: 'transaction',
+        entry: bundle.map(resource => {
+          return {
+            resource,
+            request: {
+              method: method,
+              url: (method === 'PUT' || method === 'PATCH') && resource.id ? resource.resourceType + '/' + resource.id : resource.resourceType
+            }
+          }
+        })
+      }
+    } else {
+      transactionBundle = <fhir4.Bundle<fhir4.Resource>>bundle;
+    }
+    return this.ready<fhir4.Bundle>(client => client.request({
+      method: 'POST',
+      url: '/',
+      body: JSON.stringify(transactionBundle)
+    }))
+  }
+
   // FHIR Request
-  request<T>(url: string): Promise<fhir4.Bundle<T>> {
+  query<T>(url: string): Promise<fhir4.Bundle<T>> {
     if (url.length >= 2048) {
       return this.ready<fhir4.Bundle<T>>(client => client.request({
         method: 'POST',

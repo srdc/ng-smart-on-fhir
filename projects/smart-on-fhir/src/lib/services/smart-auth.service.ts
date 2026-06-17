@@ -196,6 +196,10 @@ export class SmartAuthService {
     return this.clientPromise;
   }
 
+  getClientConfig() {
+    return this.selectedClient;
+  }
+
   logout() {
     this.clearSession();
     this.getClient().then(client => {
